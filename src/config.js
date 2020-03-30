@@ -15,7 +15,7 @@ export default {
     GAME_HEIGHT : 375 * 2,
 
     pixiOptions: {
-        backgroundColor: 16777215,
+        backgroundColor: 0,
         antialias      : false,
         sharedTicker   : true,
         view           : canvas,
@@ -34,14 +34,11 @@ export default {
         "images/bg.png",
         "images/aircraft1.png",
         "images/aircraft2.png",
-        "images/btn_A.png",
         "images/bullet_blue.png",
         "images/default_user.png",
         "images/avatar_default.png",
         "images/hosticon.png",
         "images/iconready.png",
-        "images/btn_bg.png",
-        "images/small_btn_bg.png",
     ],
 
     msg: {

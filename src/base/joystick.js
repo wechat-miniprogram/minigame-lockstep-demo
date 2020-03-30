@@ -1,6 +1,7 @@
 import * as PIXI from '../../libs/pixi.js';
 import config    from '../config.js';
 import Tween     from './tween.js';
+import { createCircle } from '../common/ui.js';
 import {
     none,
     convertRadian2Degree,
@@ -16,12 +17,12 @@ const UP   = "touchend";
 const OUT  = "touchendoutside";
 
 // 虚拟摇杆的大小
-const JOYSTICKWIDTH  = 150 * dpr;
-const JOYSTICKHEIGHT = 150 * dpr;
+const JOYSTICKWIDTH  = 128.7 * dpr;
+const JOYSTICKHEIGHT = 128.7 * dpr;
 
 // 虚拟摇杆的位置
 const WRAPPER_X = 40 * dpr;
-const WRAPPER_Y = config.GAME_HEIGHT - JOYSTICKHEIGHT - 30 * dpr;
+const WRAPPER_Y = config.GAME_HEIGHT - JOYSTICKHEIGHT - 40.3 * dpr;
 
 /**
  * @constructor
@@ -96,24 +97,31 @@ export default class JoyStick extends PIXI.Container {
 	}
 
 	renderUI() {
-        this.radius = JOYSTICKWIDTH / 2;
+		this.radius = JOYSTICKWIDTH / 2;
 
 		// 添加小圆点区域限制
-        const wrap = PIXI.Sprite.from('images/joystick_wrap.png');
+		const wrap = createCircle({
+			x: WRAPPER_X + this.radius,
+			y: WRAPPER_Y + this.radius,
+			radius: this.radius,
+			alpha: 0
+		}),
+		img = PIXI.Sprite.from('images/joystick_wrap.png');
+		
         wrap.interactive = true;
         wrap.width  = JOYSTICKWIDTH;
         wrap.height = JOYSTICKHEIGHT;
-        wrap.x      = WRAPPER_X;
-        wrap.y      = WRAPPER_Y;
+        img.x      	= WRAPPER_X - 16;
+        img.y      	= WRAPPER_Y - 6;
 
         this.wrap   = wrap;
         this.wrap.name = 'wrap';
         this.wrap.on(DOWN, this.onTouchDown.bind(this));
-        this.addChild(wrap);
+        this.addChild(img, wrap);
 
         this.center = {
-			x: this.wrap.x + this.radius,
-			y: this.wrap.y + this.radius,
+			x: this.wrap.x,
+            y: this.wrap.y
         }
 
         this.button = PIXI.Sprite.from('images/joystick.png');

@@ -17,11 +17,12 @@ export default class Hp extends PIXI.Sprite {
 
         graphics.clear();
 
-        graphics.lineStyle(2, 0x666666, 1);
+        graphics.lineStyle(2, 6710886, 1);
+        graphics.beginFill(14211288, 1);
         graphics.drawRoundedRect(0, 0, width, height, height / 2);
 
-        graphics.lineStyle(2, 0x5a8ecd, 1);
-        graphics.beginFill(0x5a8ecd, 1);
+        graphics.lineStyle(2, 6710886, 1);
+        graphics.beginFill(10002336, 1);
         graphics.drawRoundedRect(1, 1, width * ( curr / hp), height - 2, (height - 2) / 2);
         graphics.endFill();
     }

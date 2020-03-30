@@ -1,17 +1,28 @@
 {
 	"description": "项目配置文件。",
 	"setting": {
-		"urlCheck": true,
+		"urlCheck": false,
 		"es6": true,
 		"postcss": true,
 		"minified": false,
 		"newFeature": true,
+		"coverView": true,
 		"autoAudits": false,
-		"checkInvalidKey": true
+		"showShadowRootInWxmlPanel": true,
+		"scopeDataCheck": false,
+		"checkInvalidKey": true,
+		"checkSiteMap": true,
+		"uploadWithSourceMap": true,
+		"babelSetting": {
+			"ignore": [],
+			"disablePlugins": [],
+			"outputPath": ""
+		},
+		"bundle": true
 	},
 	"compileType": "game",
-	"libVersion": "2.10.0",
-	"appid": "wxcb4f6e5e8c41c824",
+	"libVersion": "dev",
+	"appid": "wx4f4a4549a1069d03",
 	"projectname": "aircraft-war",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},

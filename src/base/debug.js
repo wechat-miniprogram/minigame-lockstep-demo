@@ -19,36 +19,43 @@ export default class Battle extends PIXI.Container {
             return;
         }
 
-        const w = 300;
-        let start = 10;
-        const padding = 7;
-        const font    = 20;
-        const h = (msgArr.length + 1) * (padding + font) + padding * 2;
+        const w = 465;
+        const font    = 22;
+        const h = 108;
 
         let box = new PIXI.Container();
         this.box = box;
         this.addChild(box);
         box.x = (config.GAME_WIDTH - w) / 2;
-        box.y = 20;
+        box.y = config.GAME_HEIGHT - h - 52;
         box.width = w;
-        box.height = h;
+        box.height = h + 4;
 
         let g = new PIXI.Graphics();
-        g.beginFill(0, 0.6);
-        g.drawRoundedRect(0, 0, w, h, 10);
+        g.lineStyle(2, 5729173, 1);
+        g.beginFill(14211288, .7);
+        g.drawRoundedRect(0, 0, w, h, 18);
         g.endFill();
         box.addChild(g);
 
-        msgArr.unshift('调试信息');
-        msgArr.forEach(str=> {
-            box.addChild(createText({
-                str,
-                x  : 10,
-                y  : start,
+        for (var i = 0, len = msgArr.length / 2, y = void 0; i < len; i++) {
+            y = i ? msgArr[i * 2 - 1].y + msgArr[i * 2 - 1].height + 16 : 24;
+            msgArr[i * 2] = createText({
+                str: msgArr[i * 2],
+                style: { fontSize: font, fill: "#576B95" },
                 left: true,
-                style: { fontSize: font, fill: '#ffffff'}
-            }));
-            start += padding + font;
-        });
+                x: 22,
+                y: y
+            });
+            msgArr[i * 2 + 1] = createText({
+                str: msgArr[i * 2 + 1],
+                style: { fontSize: font, fill: "#576B95" },
+                left: true,
+                x: 215,
+                y: y
+            });
+        }
+        box.addChild(...msgArr);
+        msgArr = null;
     }
 }

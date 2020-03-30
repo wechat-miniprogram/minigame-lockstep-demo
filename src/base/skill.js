@@ -5,13 +5,12 @@ const dpr = 2;
 
 export default class JoyStick extends PIXI.Sprite {
     constructor() {
-        let base    = PIXI.BaseTexture.from('images/btn_A.png');
-        let button  = new PIXI.Texture(base, new PIXI.Rectangle(0, 0, 120, 120));
+        let button  = PIXI.Texture.from("images/attack.png");
 
         super(button);
 
         this.button       = button;
-        this.buttonActive = new PIXI.Texture(base, new PIXI.Rectangle(0, 120, 120, 120));
+        this.buttonActive = PIXI.Texture.from("images/attacking.png")
 
         this.eventemitter = new PIXI.utils.EventEmitter();
 

@@ -50,11 +50,13 @@ class GameServer {
     }
 
     bindEvents() {
+        this.onBroadcastHandler      = this.onBroadcast.bind(this);
         this.onSyncFrameHandler      = this.onSyncFrame.bind(this);
         this.onRoomInfoChangeHandler = this.onRoomInfoChange.bind(this);
         this.onGameStartHandler      = this.onGameStart.bind(this);
         this.onGameEndHandler        = this.onGameEnd.bind(this);
 
+        this.server.onBroadcast(this.onBroadcastHandler);
         this.server.onSyncFrame(this.onSyncFrameHandler);
         this.server.onRoomInfoChange(this.onRoomInfoChangeHandler);
         this.server.onGameStart(this.onGameStartHandler);
@@ -117,11 +119,20 @@ class GameServer {
         this.server.onDisconnect((res) => {
             console.log('onDisconnect', res);
             this.isDisconnect = true;
-            wx.showToast({
-                title: '游戏已掉线...',
-                icon: 'none',
-                duration: 2000
-            })
+            res.type !== "game" && wx.showToast({
+                title: "游戏已掉线...",
+                icon: "none",
+                duration: 2e3
+            });
+            res.type === "game" && function(that) {
+                function relink() {
+                    that.server.reconnect().then(function(res) {
+                        console.log("networkType change or onShow -> reconnect", res);
+                        ++that.reconnectSuccess;
+                    }).catch(relink);
+                }
+                relink();
+            }(this);
         });
 
         wx.onShow(() => {
@@ -130,6 +141,7 @@ class GameServer {
     }
 
     offEvents() {
+        this.server.offBroadcast(this.onBroadcastHandler);
         this.server.offSyncFrame(this.onSyncFrameHandler);
         this.server.offRoomInfoChange(this.onRoomInfoChangeHandler);
         this.server.offGameStart(this.onGameStartHandler);
@@ -155,6 +167,10 @@ class GameServer {
 
         this.isDisconnect = false;
         this.isLogout     = false;
+    }
+
+    onBroadcast(){
+        this.startGame();
     }
 
     onGameStart() {
@@ -314,29 +330,28 @@ class GameServer {
         return this.server.getRoomInfo();
     }
 
-    startGame(accessInfo) {
-        return this.server.startGame({accessInfo});
+    startGame() {
+        return this.server.startGame();
     }
 
     memberLeaveRoom(callback) {
-        this.server.memberLeaveRoom().then((res) => {
-            if ( res.errCode === 0 ) {
-                this.clear();
-            } else {
-                callback && callback(res);
-            }
+        this.server.memberLeaveRoom({
+            accessInfo: this.accessInfo
+        }).then((res) => {
+            if ( res.errCode === 0 ) this.clear();
+                
+            callback && callback(res);
         });
     }
 
     ownerLeaveRoom(callback) {
         this.server.ownerLeaveRoom({
+            accessInfo: this.accessInfo,
             assignToMinPosNum: true
         }).then((res) => {
-            if ( res.errCode === 0 ) {
-                this.clear();
-            } else {
-                callback && callback(res);
-            }
+            if ( res.errCode === 0 ) this.clear();
+
+            callback && callback(res);
         });
     }
 
@@ -349,7 +364,7 @@ class GameServer {
     }
 
     updateReadyStatus(isReady) {
-        return this.server.updateReadyStatus({ isReady });
+        return this.server.updateReadyStatus({ accessInfo: this.accessInfo, isReady });
     }
 
     update(dt) {
