@@ -5,6 +5,7 @@ import Player     from '../base/player.js';
 import Skill      from '../base/skill.js';
 import Hp         from '../base/hp.js'
 import databus    from '../databus.js';
+import { createBtn } from '../common/ui.js';
 
 import {
     checkCircleCollision,
@@ -51,13 +52,40 @@ export default class Battle extends PIXI.Container {
             ]);
         });
         this.addChild(this.skill);
+
+        this.appendBackBtn();
+
+        this.onRoomInfoChange();
+    }
+
+    appendBackBtn() {
+        const back = createBtn({
+            img   : 'images/goBack.png',
+            x     : 104,
+            y     : 68,
+            onclick: () => {
+                this.showModal('离开房间会游戏结束！你确定吗？')
+            }
+        });
+
+        this.addChild(back);
+    }
+
+    onRoomInfoChange(){
+        this.gameServer.event.on(
+            "onRoomInfoChange",
+            (res => {
+                 res.memberList.length < 2 && this.showModal( '对方已离开房间，无法继续进行PK！' , true );
+            }).bind(this)
+        );
     }
 
     initPlayer() {
         let memberList = this.gameServer.roomInfo.memberList || [];
 
         memberList.forEach( member => {
-            let { role, clientId, nickname } = member;
+            console.log(member)
+            let { role, clientId, nickname, isReady } = member;
 
             let player = new Player();
             player.setData(member);
@@ -66,8 +94,8 @@ export default class Battle extends PIXI.Container {
             this.addChild(player);
 
             let hp = new Hp({
-                width : 300,
-                height: 20,
+                width : 231,
+                height: 22,
                 hp    : config.playerHp,
             });
             this.addChild(hp);
@@ -78,29 +106,47 @@ export default class Battle extends PIXI.Container {
             if ( role === config.roleMap.owner ) {
                 player.x = player.width / 2;
                 player.setDirection(0);
-                hp.setPos(20, 20);
-                const name = createText({
-                    str: nickname,
-                    style: { fontSize: 30, align: 'center'},
-                    x  : 20,
-                    y  : 70,
-                });
-                name.x += name.width / 2;
-                this.addChild(name);
+                hp.setPos(330, 56);
+
+                this.createPlayerInformation(hp, nickname, isReady, (name, value)=>{
+                    value.x = hp.graphics.x - value.width / 2;
+                    this.addChild(name, value);
+                })
+
             } else {
                 player.x = config.GAME_WIDTH - player.width / 2;
                 player.setDirection(180);
-                hp.setPos(config.GAME_WIDTH - 300 - 20, 20);
-                const name = createText({
-                    str: nickname,
-                    style: { fontSize: 30, align: 'center'},
-                    y  : 70,
-                });
-                name.x = config.GAME_WIDTH - name.width / 2 - 20;
-                this.addChild(name);
+                hp.setPos(config.GAME_WIDTH - 231 - 253, 56);
+
+                this.createPlayerInformation(hp, nickname, isReady, (name, value)=>{
+                    value.x = hp.graphics.x - value.width / 2;
+                    name ? this.addChild(name, value) : this.addChild(value);
+                })
             }
             player.frameX = player.x;
         });
+    }
+
+    createPlayerInformation(hp, nickname, isName, fn){
+        let name, value;
+        isName &&
+            (name = createText({
+                str  : nickname,
+                style: { fontSize: 28, align: "center", fill: "#1D1D1D" },
+                left : true,
+                x: hp.graphics.x,
+                y: 96
+            }));
+        value = createText({
+            str: "生命值：",
+            style: {
+                fontSize: 24,
+                fill: "#383838"
+            },
+            y: hp.graphics.y + hp.graphics.height / 2
+        });
+
+        fn( name, value );
     }
 
     renderCount(count) {
@@ -192,6 +238,27 @@ export default class Battle extends PIXI.Container {
         databus.bullets.forEach(bullet => {
             bullet.preditUpdate(dt);
         });
+    }
+
+    showModal(content, isCancel){
+        wx.showModal({
+            title: '温馨提示',
+            content,
+            showCancel: !isCancel,
+            success: (res) => {
+                if ( res.confirm ) {
+                    if ( databus.selfMemberInfo.role === config.roleMap.owner ) {
+                        this.gameServer.ownerLeaveRoom();
+                    } else {
+                        this.gameServer.memberLeaveRoom();
+                    }
+                }
+            }
+        })
+    }
+
+    _destroy() {
+        this.gameServer.event.off('onRoomInfoChange');
     }
 }
 

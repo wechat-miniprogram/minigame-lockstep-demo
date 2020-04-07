@@ -20,10 +20,13 @@ export function createBtn(options) {
         btn.on('pointerdown', onclick);
     }
 
-    let _text = new PIXI.Text(text, style || {fontSize: 32, align: 'center'});
-    _text.anchor.set(0.5);
+    if ( text ){
+        let _text = new PIXI.Text(text, style || {fontSize: 32, align: 'center'});
+        _text.anchor.set(0.5);
+    
+        btn.addChild(_text);
+    }
 
-    btn.addChild(_text);
 
     return btn;
 }
@@ -42,3 +45,13 @@ export function createText(options) {
     return text;
 }
 
+export function createCircle(options) {
+    const { x, y, radius, color = 0 , alpha } = options;
+
+    let circle = new PIXI.Graphics();
+    circle.beginFill(color, alpha).drawCircle(0, 0, radius || 0).endFill();
+    circle.x = x || 0;
+    circle.y = y || 0;
+
+    return circle;
+}

@@ -7,7 +7,7 @@ import gameServer  from './gameserver.js';
 import login       from './base/login.js';
 import Room        from './scenes/room.js';
 import Battle      from './scenes/battle.js';
-import Result      from './scenes/result.js';
+// import Result      from './scenes/result.js';
 import Home        from './scenes/home.js';
 
 export default class App extends PIXI.Application {
@@ -32,7 +32,7 @@ export default class App extends PIXI.Application {
     runScene(Scene) {
         let old = this.stage.getChildByName('scene');
 
-        while (old ) {
+        while (old) {
             if ( old._destroy ) {
                 old._destroy();
             }
@@ -43,6 +43,7 @@ export default class App extends PIXI.Application {
 
         let scene = new Scene();
         scene.name = 'scene';
+        scene.sceneName = Scene.name;
         scene.launch(gameServer);
         this.stage.addChild(scene);
 
@@ -86,7 +87,19 @@ export default class App extends PIXI.Application {
         });
 
         gameServer.event.on('onGameEnd', () => {
-            this.runScene(Result);
+           gameServer.gameResult.forEach((member) => {
+                var isSelf = member.nickname === databus.userInfo.nickName;
+                isSelf && wx.showModal({
+                    content: member.win ? "你已获得胜利" : "你输了",
+                    confirmText: "返回首页",
+                    confirmColor: "#02BB00",
+                    showCancel: false,
+                    success: () => {
+                       gameServer.clear();
+                       this.runScene(Home);
+                    }
+                });
+            });
         });
     }
 
@@ -135,11 +148,46 @@ export default class App extends PIXI.Application {
 
     bindWxEvents() {
         wx.onShow(res => {
+            console.log('wx.onShow', res)
             let accessInfo = res.query.accessInfo;
-            if ( accessInfo && !databus.currAccessInfo  ) {
+
+            if (!accessInfo) return;
+
+            if (!databus.currAccessInfo) {
                 databus.currAccessInfo = accessInfo;
 
                 this.joinToRoom();
+
+                return;
+            }
+
+            if (accessInfo !== databus.currAccessInfo) {
+                wx.showModal({
+                    title: "温馨提示",
+                    content: "你要离开当前房间，接受对方的对战邀请吗？",
+                    success: res => {
+                        if (!res.confirm) return;
+                        let room =
+                            databus.selfMemberInfo.role === config.roleMap.owner
+                                ? "ownerLeaveRoom"
+                                : "memberLeaveRoom";
+
+                        gameServer[room](res => {
+                            if (res.errCode)
+                                return wx.showToast({
+                                    title: "离开房间失败！",
+                                    icon: "none",
+                                    duration: 2000
+                                });
+
+                            databus.currAccessInfo = accessInfo;
+
+                            this.joinToRoom();
+                        });
+                    }
+                });
+
+                return;
             }
         });
     }

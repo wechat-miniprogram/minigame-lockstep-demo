@@ -21,24 +21,22 @@ export default class Room extends PIXI.Container {
     }
 
     initUI() {
-        let title = new PIXI.Text('1V1对战', { fontSize: 36, align : 'center'});
+        let title = new PIXI.Text('1V1对战', { fontSize: 56, align : 'center', fill: "#515151"});
         title.x   = config.GAME_WIDTH / 2 - title.width / 2;
-        title.y   = 100;
+        title.y   = 96;
         this.addChild(title);
 
-        let vs = new PIXI.Text('vs', { fontSize: 36, align : 'center'});
+        let vs = new PIXI.Text('VS', { fontSize: 64, align : 'center', fill: "#515151"});
         vs.x   = config.GAME_WIDTH / 2 - vs.width / 2;
-        vs.y   = 330;
+        vs.y   = 307;
         this.addChild(vs);
     }
 
     appendBackBtn() {
         const back = createBtn({
-            img   : 'images/small_btn_bg.png',
-            x     : 100,
-            y     : 50,
-            text  : '返回',
-            style: { align: 'center', fontSize: 24},
+            img   : 'images/goBack.png',
+            x     : 104,
+            y     : 68,
             onclick: () => {
                 wx.showModal({
                     title: '温馨提示',
@@ -60,37 +58,41 @@ export default class Room extends PIXI.Container {
     }
 
     appendOpBtn(member) {
-        let { isReady } = member;
+        let { isReady, role } = member;
 
-        this.addChild(createBtn({
-            img : 'images/btn_bg.png',
-            x   : config.GAME_WIDTH / 2 - 178 / 2 - 30,
-            y   : config.GAME_HEIGHT - 150,
-            text: isReady ? '取消准备' : '准备',
+        let isHosticon = role === config.roleMap.owner;
+
+        let getReady = createBtn({
+            img : 'images/getReady.png',
+            x   : config.GAME_WIDTH / 2 - 159,
+            y   : config.GAME_HEIGHT - 160,
             onclick: () => {
                 this.gameServer.updateReadyStatus(!isReady);
             }
-        }));
+        })
 
         let start = createBtn({
-            img : 'images/btn_bg.png',
-            x   : config.GAME_WIDTH / 2 + 178 / 2 + 30,
-            y   : config.GAME_HEIGHT - 150,
-            text: '开始',
+            img : 'images/start.png',
+            x   : config.GAME_WIDTH / 2 + 159,
+            y   : config.GAME_HEIGHT - 160,
             onclick: () => {
                 if ( !this.allReady ) {
                     showTip('全部玩家准备后方可开始');
                 } else {
-                    this.gameServer.startGame();
+                    this.gameServer.server.broadcastInRoom({
+                        msg: "START"
+                    });
                 }
             }
         });
 
+        isReady && ( getReady.alpha = 0.5 );
+
         if ( !this.allReady ) {
-            start.alpha = 0.7;
+            start.alpha = 0.5;
         }
 
-        this.addChild(start);
+        isHosticon ? this.addChild(getReady, start) : this.addChild(getReady);
     }
 
     clearUI() {
@@ -100,29 +102,29 @@ export default class Room extends PIXI.Container {
 
     createOneUser(options) {
         const { headimg, index, nickname, role, isReady } = options;
-        const padding = 100;
+        const padding = 136;
 
         const user = new PIXI.Sprite.from(headimg);
         user.name   = 'player';
-        user.width  = 100;
-        user.height = 100;
+        user.width  = 144;
+        user.height = 144;
         user.x = (   index === 0
                    ? config.GAME_WIDTH / 2 - user.width - padding
                    : config.GAME_WIDTH / 2 + padding  );
-        user.y     = 300;
+        user.y     = 266;
 
         this.addChild(user);
 
-        let name = new PIXI.Text(nickname, { fontSize: 32, align : 'center'});
+        let name = new PIXI.Text(nickname, { fontSize: 36, align : 'center', fill: "#515151"});
         name.anchor.set(0.5);
         name.x = user.width / 2;
-        name.y = user.height + 70;
+        name.y = user.height + 23;
         user.addChild(name);
 
         if ( role === config.roleMap.owner ) {
-            const host = new PIXI.Sprite.from('images/hosticon.png');
-            host.width  = 30;
-            host.height = 30;
+            const host = new PIXI.Sprite.from("images/hosticon.png");
+            host.scale.set(.8);
+            host.y = -30;
             user.addChild(host);
         }
 
