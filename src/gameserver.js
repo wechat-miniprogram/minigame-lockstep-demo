@@ -128,15 +128,16 @@ class GameServer {
                 icon: "none",
                 duration: 2e3
             });
-            res.type === "game" && function(that) {
-                function relink() {
-                    that.server.reconnect().then(function(res) {
-                        console.log("networkType change or onShow -> reconnect", res);
-                        ++that.reconnectSuccess;
-                    }).catch(relink);
-                }
-                relink();
-            }(this);
+
+            if (res.type === "game") {
+                console.log('invoke reconnect')
+                this.server.reconnect().then((res) => {
+                    console.log("networkType change or onShow -> reconnect", res);
+                    ++this.reconnectSuccess;
+                }).catch(e => {
+                    console.log('reconnect fail', e)
+                })
+            }
         });
 
         wx.onShow(() => {
