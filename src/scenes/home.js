@@ -1,5 +1,6 @@
 import * as PIXI  from '../../libs/pixi.js';
 import config     from '../config.js';
+import databus    from '../databus.js';
 import { createBtn, createText } from '../common/ui.js';
 
 import Debug from '../base/debug.js';
@@ -24,9 +25,17 @@ export default class Home extends PIXI.Container {
                 }
             }),
             createBtn({
-                img    : 'images/createRoom.png',
+                img    : 'images/quickStart.png',
                 x      : config.GAME_WIDTH / 2,
                 y      : 442,
+                onclick: () => {
+                    this.gameServer.createMatchRoom();
+                }
+            }),
+            createBtn({
+                img    : 'images/createRoom.png',
+                x      : config.GAME_WIDTH / 2,
+                y      : 582,
                 onclick: () => {
                     if ( this.handling ) {
                         return;
@@ -46,7 +55,7 @@ export default class Home extends PIXI.Container {
 
     launch(gameServer) {
         this.gameServer = gameServer;
-
+        databus.matchPattern = void 0;
         this.appendOpBtn();
     }
 }
