@@ -184,7 +184,6 @@ export default class Room extends PIXI.Container {
 
     _destroy() {
         this.gameServer.event.off('onRoomInfoChange');
-        this.gameServer.event.off('onRoomMatchChange');
     }
 
     onRoomInfoChange(roomInfo) {
@@ -196,12 +195,10 @@ export default class Room extends PIXI.Container {
         this.gameServer = gameServer;
         this.onRoomInfoChangeHandler = this.onRoomInfoChange.bind(this);
 
-        gameServer.event.on('onRoomMatchChange', this.onRoomInfoChangeHandler);
-
         // 每次房间信息更新重刷UI
         gameServer.event.on('onRoomInfoChange', this.onRoomInfoChangeHandler);
 
-        gameServer.getRoomInfo(this.accessInfo).then((res) => {
+        !databus.matchPattern && gameServer.getRoomInfo(this.accessInfo).then((res) => {
             console.log('getRoomInfo', res);
             this.handleRoomInfo(res);
         });

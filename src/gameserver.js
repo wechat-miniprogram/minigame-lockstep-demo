@@ -356,15 +356,15 @@ class GameServer {
     createMatchRoom(){
         let { avatarUrl, nickName } = databus.userInfo;
 
-        this.event.emit("createRoom");
-
         this.server.startMatch({
             match_id: "CuQJHh6u_WqqGQ1UEzMhnfeIIgqdgCAqw12FNbl6l3E",
         });
 
         databus.matchPattern = true;
 
-        this.event.emit("onRoomMatchChange", {
+        this.event.emit("createRoom");
+        
+        this.event.emit("onRoomInfoChange", {
             memberList: [
                 { headimg: avatarUrl, nickname: nickName },
                 {

@@ -95,7 +95,6 @@ export default class App extends PIXI.Application {
                     showCancel: false,
                     success: () => {
                        gameServer.clear();
-                       this.runScene(Home);
                     }
                 });
             });
