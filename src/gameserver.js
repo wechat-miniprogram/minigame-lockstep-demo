@@ -1,4 +1,5 @@
 import * as PIXI from '../libs/pixi.js';
+import compareVersion  from '../libs/compareVersion.js';
 import config    from './config.js';
 import databus   from './databus.js'
 import {
@@ -13,6 +14,9 @@ class GameServer {
 
         this.server   = wx.getGameServerManager();
         this.event    = new PIXI.utils.EventEmitter();
+
+        // 检测当前版本
+        this.isVersionLow = compareVersion(wx.getSystemInfoSync().SDKVersion, '2.14.4') < 0;
 
         // 用于存房间信息
         this.roomInfo = {};
@@ -62,7 +66,7 @@ class GameServer {
         this.server.onRoomInfoChange(this.onRoomInfoChangeHandler);
         this.server.onGameStart(this.onGameStartHandler);
         this.server.onGameEnd(this.onGameEndHandler);
-        this.server.onMatch(this.onMatchHandler)
+        if (!this.isVersionLow) this.server.onMatch(this.onMatchHandler)
 
         const reconnect = () => {
             // 如果logout了，需要先logout再connect

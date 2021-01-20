@@ -29,6 +29,12 @@ export default class Home extends PIXI.Container {
                 x      : config.GAME_WIDTH / 2,
                 y      : 442,
                 onclick: () => {
+                    if ( this.gameServer.isVersionLow ) return wx.showModal({
+                        content: '你的微信版本过低，无法演示该功能！',
+                        showCancel: false,
+                        confirmColor: '#02BB00',
+                    });
+
                     this.gameServer.createMatchRoom();
                 }
             }),
