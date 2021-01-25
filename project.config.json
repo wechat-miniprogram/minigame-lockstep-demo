@@ -36,7 +36,7 @@
     "minifyWXSS": true
   },
   "compileType": "game",
-  "libVersion": "2.10.4",
+  "libVersion": "2.14.3",
   "appid": "wx4f4a4549a1069d03",
   "projectname": "aircraft-war",
   "simulatorType": "wechat",
