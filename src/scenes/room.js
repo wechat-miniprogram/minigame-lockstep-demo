@@ -17,6 +17,7 @@ export default class Room extends PIXI.Container {
 
         this.gameServer = null;
 
+        this.initUI();
     }
 
     initUI() {
@@ -42,12 +43,6 @@ export default class Room extends PIXI.Container {
                     content: '是否离开房间？',
                     success: (res) => {
                         if ( res.confirm ) {
-                            if (databus.matchPattern){
-                                this.gameServer.cancelMatch({match_id:'CuQJHh6u_WqqGQ1UEzMhnfeIIgqdgCAqw12FNbl6l3E'});
-                                this.gameServer.clear();
-                                return 
-                            } 
-
                             if ( databus.selfMemberInfo.role === config.roleMap.owner ) {
                                 this.gameServer.ownerLeaveRoom();
                             } else {
@@ -102,6 +97,7 @@ export default class Room extends PIXI.Container {
 
     clearUI() {
         this.removeChildren();
+        this.initUI();
     }
 
     createOneUser(options) {
@@ -132,7 +128,7 @@ export default class Room extends PIXI.Container {
             user.addChild(host);
         }
 
-        if ( isReady && !databus.matchPattern ) {
+        if ( isReady ) {
             const ready = new PIXI.Sprite.from('images/iconready.png');
             ready.width  = 40;
             ready.height = 40;
@@ -146,7 +142,6 @@ export default class Room extends PIXI.Container {
     handleRoomInfo(res) {
         this.clearUI();
 
-        this.initUI();
         const data       = res.data            || {};
         const roomInfo   = data.roomInfo       || {};
         const memberList = roomInfo.memberList || [];
@@ -164,7 +159,7 @@ export default class Room extends PIXI.Container {
             if ( databus.selfClientId === member.clientId ) {
                 databus.selfPosNum     = member.posNum;
                 databus.selfMemberInfo = member;
-                !databus.matchPattern && this.appendOpBtn(member);
+                this.appendOpBtn(member);
             }
 
             if ( member.isEmpty ) {
@@ -195,12 +190,12 @@ export default class Room extends PIXI.Container {
         this.gameServer = gameServer;
         this.onRoomInfoChangeHandler = this.onRoomInfoChange.bind(this);
 
-        // 每次房间信息更新重刷UI
-        gameServer.event.on('onRoomInfoChange', this.onRoomInfoChangeHandler);
-
-        !databus.matchPattern && gameServer.getRoomInfo(this.accessInfo).then((res) => {
+        gameServer.getRoomInfo(this.accessInfo).then((res) => {
             console.log('getRoomInfo', res);
             this.handleRoomInfo(res);
+
+            // 每次房间信息更新重刷UI
+            gameServer.event.on('onRoomInfoChange', this.onRoomInfoChangeHandler);
         });
     }
 }
