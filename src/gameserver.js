@@ -68,6 +68,10 @@ class GameServer {
         this.server.onGameEnd(this.onGameEndHandler);
         if (!this.isVersionLow) this.server.onMatch(this.onMatchHandler)
 
+        this.server.onGameStart((res) => {
+            console.log('来自系统的onStart')
+        });
+
         const reconnect = () => {
             // 如果logout了，需要先logout再connect
             if ( this.isLogout && this.isDisconnect ) {
@@ -215,6 +219,10 @@ class GameServer {
     onGameStart() {
         console.log('onGameStart');
         this.event.emit('onGameStart');
+        /*if ( needEmit ) {
+            this.event.emit('onGameStart');
+        }*/
+
         this.hasGameStart = true;
 
         this.debugTime = setInterval(() => {
@@ -325,7 +333,7 @@ class GameServer {
                                     this.reconnecting = true;
 
                                     // 手动调用onGameStart模拟正常开局
-                                    this.onGameStart();
+                                    this.onGameStart('人工');
                                 }).catch((e) => {
                                     console.log(e);
                                     wx.showToast({

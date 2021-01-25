@@ -63,6 +63,7 @@ export default class Player extends PIXI.extras.AnimatedSprite {
         this.frameDegree = degree;
         this.currDegree  = degree;
         this.rotation    = convertDegree2Radian(degree);
+        this.frameRotation = this.rotation;
     }
 
     setData(data) {
