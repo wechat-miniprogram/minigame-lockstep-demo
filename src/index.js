@@ -32,7 +32,7 @@ export default class App extends PIXI.Application {
     runScene(Scene) {
         let old = this.stage.getChildByName('scene');
 
-        while (old ) {
+        while (old) {
             if ( old._destroy ) {
                 old._destroy();
             }
@@ -43,6 +43,7 @@ export default class App extends PIXI.Application {
 
         let scene = new Scene();
         scene.name = 'scene';
+        scene.sceneName = Scene.name;
         scene.launch(gameServer);
         this.stage.addChild(scene);
 
@@ -95,6 +96,7 @@ export default class App extends PIXI.Application {
                     showCancel: false,
                     success: () => {
                        gameServer.clear();
+                       this.runScene(Home);
                     }
                 });
             });
@@ -146,6 +148,7 @@ export default class App extends PIXI.Application {
 
     bindWxEvents() {
         wx.onShow(res => {
+            console.log('wx.onShow', res)
             let accessInfo = res.query.accessInfo;
 
             if (!accessInfo) return;
@@ -178,7 +181,7 @@ export default class App extends PIXI.Application {
                                 });
 
                             databus.currAccessInfo = accessInfo;
-                            
+
                             this.joinToRoom();
                         });
                     }

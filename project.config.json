@@ -20,6 +20,7 @@
     "compileHotReLoad": false,
     "useMultiFrameRuntime": true,
     "useApiHook": true,
+    "useApiHostProcess": true,
     "babelSetting": {
       "ignore": [],
       "disablePlugins": [],
@@ -32,11 +33,10 @@
     "userConfirmedBundleSwitch": false,
     "packNpmManually": false,
     "packNpmRelationList": [],
-    "minifyWXSS": true,
-    "useApiHostProcess": true
+    "minifyWXSS": true
   },
   "compileType": "game",
-  "libVersion": "2.14.4",
+  "libVersion": "2.10.4",
   "appid": "wx4f4a4549a1069d03",
   "projectname": "aircraft-war",
   "simulatorType": "wechat",
@@ -49,6 +49,18 @@
       "list": []
     },
     "plugin": {
+      "list": []
+    },
+    "game": {
+      "list": [
+        {
+          "id": 0,
+          "name": "房间",
+          "query": "accessInfo=x9spEb8nzMK7vfSVhxtnOpIlgTz3RsD4_wew3nUyoXY"
+        }
+      ]
+    },
+    "gamePlugin": {
       "list": []
     },
     "miniprogram": {

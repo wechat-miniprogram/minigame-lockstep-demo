@@ -18,7 +18,6 @@ class DataBus {
         this.selfClientId   = 1;
         this.selfMemberInfo = {};
         this.debugMsg       = [];
-        this.matchPattern   = void 0;
     }
 
     /**

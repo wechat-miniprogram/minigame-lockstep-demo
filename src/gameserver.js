@@ -1,5 +1,4 @@
 import * as PIXI from '../libs/pixi.js';
-import compareVersion  from '../libs/compareVersion.js';
 import config    from './config.js';
 import databus   from './databus.js'
 import {
@@ -14,9 +13,6 @@ class GameServer {
 
         this.server   = wx.getGameServerManager();
         this.event    = new PIXI.utils.EventEmitter();
-
-        // 检测当前版本
-        this.isVersionLow = compareVersion(wx.getSystemInfoSync().SDKVersion, '2.14.4') < 0;
 
         // 用于存房间信息
         this.roomInfo = {};
@@ -59,14 +55,16 @@ class GameServer {
         this.onRoomInfoChangeHandler = this.onRoomInfoChange.bind(this);
         this.onGameStartHandler      = this.onGameStart.bind(this);
         this.onGameEndHandler        = this.onGameEnd.bind(this);
-        this.onMatchHandler          = this.onMatch.bind(this);
 
         this.server.onBroadcast(this.onBroadcastHandler);
         this.server.onSyncFrame(this.onSyncFrameHandler);
         this.server.onRoomInfoChange(this.onRoomInfoChangeHandler);
         this.server.onGameStart(this.onGameStartHandler);
         this.server.onGameEnd(this.onGameEndHandler);
-        if (!this.isVersionLow) this.server.onMatch(this.onMatchHandler)
+
+        this.server.onGameStart((res) => {
+            console.log('来自系统的onStart')
+        });
 
         const reconnect = () => {
             // 如果logout了，需要先logout再connect
@@ -130,15 +128,16 @@ class GameServer {
                 icon: "none",
                 duration: 2e3
             });
-            res.type === "game" && function(that) {
-                function relink() {
-                    that.server.reconnect().then(function(res) {
-                        console.log("networkType change or onShow -> reconnect", res);
-                        ++that.reconnectSuccess;
-                    }).catch(relink);
-                }
-                relink();
-            }(this);
+
+            if (res.type === "game") {
+                console.log('invoke reconnect')
+                this.server.reconnect().then((res) => {
+                    console.log("networkType change or onShow -> reconnect", res);
+                    ++this.reconnectSuccess;
+                }).catch(e => {
+                    console.log('reconnect fail', e)
+                })
+            }
         });
 
         wx.onShow(() => {
@@ -152,7 +151,6 @@ class GameServer {
         this.server.offRoomInfoChange(this.onRoomInfoChangeHandler);
         this.server.offGameStart(this.onGameStartHandler);
         this.server.offGameEnd(this.onGameEndHandler);
-        this.server.offMatch(this.onMatchHandler);
     }
 
     reset() {
@@ -180,41 +178,14 @@ class GameServer {
         this.startGame();
     }
 
-    onMatch(res){
-        let nickname = res.groupInfoList[0].memberInfoList[0].nickName;
+    onGameStart(source) {
+        console.log('onGameStart', source);
 
-        databus.currAccessInfo = this.accessInfo = res.roomServiceAccessInfo || "";
-
-        this.joinRoom(databus.currAccessInfo)
-            .then((res) => {
-                let data = res.data || {};
-                databus.selfClientId = data.clientId;
-
-                this.updateReadyStatus(true);
-
-                if (databus.userInfo.nickName !== nickname) {
-                    setTimeout(
-                        this.server.broadcastInRoom.bind(this, {
-                            msg: "START",
-                        }),
-                        3000
-                    );
-                }
-
-                wx.showToast({
-                    title: "匹配成功！3秒后开始游戏",
-                    icon: "none",
-                    duration: 2000,
-                });
-            })
-            .catch((e) => {
-                console.log(e);
-            });
-    }
-
-    onGameStart() {
-        console.log('onGameStart');
         this.event.emit('onGameStart');
+        /*if ( needEmit ) {
+            this.event.emit('onGameStart');
+        }*/
+
         this.hasGameStart = true;
 
         this.debugTime = setInterval(() => {
@@ -325,7 +296,7 @@ class GameServer {
                                     this.reconnecting = true;
 
                                     // 手动调用onGameStart模拟正常开局
-                                    this.onGameStart();
+                                    this.onGameStart('人工');
                                 }).catch((e) => {
                                     console.log(e);
                                     wx.showToast({
@@ -357,28 +328,6 @@ class GameServer {
         });
     }
 
-    createMatchRoom(){
-        let { avatarUrl, nickName } = databus.userInfo;
-
-        this.server.startMatch({
-            match_id: "CuQJHh6u_WqqGQ1UEzMhnfeIIgqdgCAqw12FNbl6l3E",
-        });
-
-        databus.matchPattern = true;
-
-        this.event.emit("createRoom");
-        
-        this.event.emit("onRoomInfoChange", {
-            memberList: [
-                { headimg: avatarUrl, nickname: nickName },
-                {
-                    headimg: "images/avatar_default.png",
-                    nickname: "正在匹配玩家...",
-                },
-            ]
-        });
-    }
-
     joinRoom(accessInfo) {
         return this.server.joinRoom({accessInfo});
     }
@@ -400,7 +349,7 @@ class GameServer {
             accessInfo: this.accessInfo
         }).then((res) => {
             if ( res.errCode === 0 ) this.clear();
-                
+
             callback && callback(res);
         });
     }
@@ -414,10 +363,6 @@ class GameServer {
 
             callback && callback(res);
         });
-    }
-
-    cancelMatch(res){
-        this.server.cancelMatch(res);
     }
 
     changeSeat(posNum) {
