@@ -83,8 +83,7 @@ export default class Battle extends PIXI.Container {
     initPlayer() {
         let memberList = this.gameServer.roomInfo.memberList || [];
 
-        memberList.forEach( member => {
-            console.log(member)
+        memberList.forEach( ( member, index ) => {
             let { role, clientId, nickname, isReady } = member;
 
             let player = new Player();
@@ -103,7 +102,7 @@ export default class Battle extends PIXI.Container {
 
             player.y = config.GAME_HEIGHT / 2;
             player.frameY = player.y;
-            if ( role === config.roleMap.owner ) {
+            if ( role === config.roleMap.owner || (databus.matchPattern && index) ) {
                 player.x = player.width / 2;
                 player.setDirection(0);
                 hp.setPos(330, 56);

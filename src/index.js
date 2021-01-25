@@ -96,7 +96,6 @@ export default class App extends PIXI.Application {
                     showCancel: false,
                     success: () => {
                        gameServer.clear();
-                       this.runScene(Home);
                     }
                 });
             });
@@ -181,7 +180,7 @@ export default class App extends PIXI.Application {
                                 });
 
                             databus.currAccessInfo = accessInfo;
-
+                            
                             this.joinToRoom();
                         });
                     }
