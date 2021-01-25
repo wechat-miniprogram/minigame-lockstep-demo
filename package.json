@@ -1,0 +1,15 @@
+{
+  "name": "game_project_tpl",
+  "version": "1.0.0",
+  "description": "game tpl",
+  "main": "dist/game.js",
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint src/**/*.js"
+  },
+  "author": "zimyuan",
+  "license": "ISC",
+  "dependencies": {
+    "eslint": "^5.16.0",
+    "pixi.js": "^4.8.7"
+  }
+}
