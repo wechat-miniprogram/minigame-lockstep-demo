@@ -2,7 +2,7 @@ import * as PIXI  from '../../libs/pixi.js';
 import config     from '../config.js';
 import databus    from '../databus.js';
 import { createBtn, createText } from '../common/ui.js';
-import { themedAsset } from '../theme.js';
+import { themedAsset, themedText } from '../theme.js';
 
 import Debug from '../base/debug.js';
 
@@ -17,7 +17,7 @@ export default class Home extends PIXI.Container {
     appendOpBtn() {
         this.addChild(
             createText({
-                str    : '小游戏帧同步功能示例',
+                str    : themedText('home.title', '小游戏帧同步功能示例'),
                 x      : config.GAME_WIDTH / 2,
                 y      : 287,
                 style  : {
@@ -31,7 +31,7 @@ export default class Home extends PIXI.Container {
                 y      : 442,
                 onclick: () => {
                     if ( this.gameServer.isVersionLow ) return wx.showModal({
-                        content: '你的微信版本过低，无法演示该功能！',
+                        content: themedText('home.lowVersion', '你的微信版本过低，无法演示该功能！'),
                         showCancel: false,
                         confirmColor: '#02BB00',
                     });
@@ -49,7 +49,7 @@ export default class Home extends PIXI.Container {
                     }
                     this.handling = true
                     wx.showLoading({
-                        title: '房间创建中...',
+                        title: themedText('home.creatingRoom', '房间创建中...'),
                     })
                     this.gameServer.createRoom({}, () => {
                         wx.hideLoading();

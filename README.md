@@ -14,6 +14,8 @@
 - 资源规范：`docs/lobster-asset-spec-phase2.md`
 - 替换清单：`docs/lobster-replace-checklist.md`
 - 发布清单：`docs/wechat-release-checklist.md`
+- 提审模板：`docs/wechat-submission-template-phase25.md`
+- UI文案包：`docs/lobster-ui-copy-pack-phase25.md`
 - 校验脚本：`node tools/verify_lobster_assets.js`
 - 当前策略：默认关闭（`false`）确保零回归；可切换为 `true` 验证主题映射链路。
 

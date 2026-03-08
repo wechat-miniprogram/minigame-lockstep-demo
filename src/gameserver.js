@@ -5,12 +5,12 @@ import databus   from './databus.js'
 import {
     showTip,
 } from './common/util.js';
-import { themedAsset } from './theme.js';
+import { themedAsset, themedText } from './theme.js';
 
 class GameServer {
     constructor() {
         if ( !wx.getGameServerManager ) {
-            return showTip('当前微信版本不支持帧同步框架');
+            return showTip(themedText('home.lowVersion', '当前微信版本不支持帧同步框架'));
         }
 
         this.server   = wx.getGameServerManager();
@@ -82,7 +82,7 @@ class GameServer {
                         console.log('networkType change or onShow -> reconnect', res)
                         ++this.reconnectSuccess;
                         wx.showToast({
-                            title: '游戏已连接',
+                            title: themedText('server.connected', '游戏已连接'),
                             icon: 'none',
                             duration: 2000
                         });
@@ -99,7 +99,7 @@ class GameServer {
                         ++this.reconnectSuccess;
                         console.log('networkType change or onShow -> reconnect', res)
                         wx.showToast({
-                            title: '游戏已连接',
+                            title: themedText('server.connected', '游戏已连接'),
                             icon: 'none',
                             duration: 2000
                         })
@@ -131,7 +131,7 @@ class GameServer {
             console.log('onDisconnect', res);
             this.isDisconnect = true;
             res.type !== "game" && wx.showToast({
-                title: "游戏已掉线...",
+                title: themedText('server.disconnected', '游戏已掉线...'),
                 icon: "none",
                 duration: 2e3
             });
@@ -207,7 +207,7 @@ class GameServer {
                 }
 
                 wx.showToast({
-                    title: "匹配成功！3秒后开始游戏",
+                    title: themedText('server.matchSuccess', '匹配成功！3秒后开始游戏'),
                     icon: "none",
                     duration: 2000,
                 });
@@ -239,7 +239,7 @@ class GameServer {
             let time = new Date() - this.startTime;
 
             databus.debugMsg = [
-                `游戏时间: ${parseInt( time / 1000)+ 's'}`,
+                themedText('server.gameTime', `游戏时间: ${parseInt( time / 1000)+ 's'}`, { sec: parseInt(time / 1000, 10) }),
                 `期望帧数: ${Math.floor(time / this.frameInterval)}帧`,
                 `实收帧数: ${this.svrFrameIndex}帧`,
                 `指令延迟: ${this.avgDelay.toFixed(1) + '(' + this.delay + ')'}ms`,
@@ -316,8 +316,8 @@ class GameServer {
                 if ( res.data && res.data.roomInfo && res.data.roomInfo.roomState === config.roomState.gameStart ) {
                     console.log('查询到还有没结束的游戏', res.data);
                     wx.showModal({
-                        title: '温馨提示',
-                        content: '查询到之前还有尚未结束的游戏，是否重连继续游戏？',
+                        title: themedText('common.notice', '温馨提示'),
+                        content: themedText('server.reconnectPrompt', '查询到之前还有尚未结束的游戏，是否重连继续游戏？'),
                         success :(modalRes) => {
                             if ( modalRes.confirm ) {
                                 this.onRoomInfoChange(res.data.roomInfo);
@@ -338,7 +338,7 @@ class GameServer {
                                 }).catch((e) => {
                                     console.log(e);
                                     wx.showToast({
-                                        title: '重连失败，请重新开房间',
+                                        title: themedText('server.reconnectFail', '重连失败，请重新开房间'),
                                         icon: 'none',
                                         duration: 2000
                                     });
@@ -382,7 +382,7 @@ class GameServer {
                 { headimg: avatarUrl, nickname: nickName },
                 {
                     headimg: themedAsset("images/avatar_default.png"),
-                    nickname: "正在匹配玩家...",
+                    nickname: themedText('server.matching', '正在匹配玩家...'),
                 },
             ]
         });

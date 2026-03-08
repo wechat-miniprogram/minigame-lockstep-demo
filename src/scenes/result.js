@@ -1,7 +1,7 @@
 import * as PIXI  from '../../libs/pixi.js';
 import config     from '../config.js';
 import { createBtn } from '../common/ui.js';
-import { themedAsset } from '../theme.js';
+import { themedAsset, themedText } from '../theme.js';
 
 export default class Result extends PIXI.Container {
     constructor() {
@@ -11,12 +11,12 @@ export default class Result extends PIXI.Container {
     }
 
     initUI() {
-        let title = new PIXI.Text('1V1对战', { fontSize: 36, align : 'center'});
+        let title = new PIXI.Text(themedText('result.title', '1V1对战'), { fontSize: 36, align : 'center'});
         title.x   = config.GAME_WIDTH / 2 - title.width / 2;
         title.y   = 100;
         this.addChild(title);
 
-        let win = new PIXI.Text('胜', { fontSize: 36, align : 'center'});
+        let win = new PIXI.Text(themedText('result.win', '胜'), { fontSize: 36, align : 'center'});
         win.x   = config.GAME_WIDTH / 2 - win.width / 2;
         win.y   = 330;
         this.addChild(win);
@@ -27,7 +27,7 @@ export default class Result extends PIXI.Container {
             img : themedAsset('images/btn_bg.png'),
             x   : config.GAME_WIDTH / 2,
             y   : config.GAME_HEIGHT - 150,
-            text: '确定',
+            text: themedText('result.confirm', '确定'),
             onclick: () => {
                 this.gameServer.clear();
             }

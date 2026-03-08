@@ -3,10 +3,10 @@ import config     from '../config.js';
 import { createBtn } from '../common/ui.js';
 import databus    from '../databus.js';
 import { showTip } from '../common/util.js';
-import { themedAsset } from '../theme.js';
+import { themedAsset, themedText } from '../theme.js';
 
 const emptyUser = {
-    nickname: '点击邀请好友',
+    nickname: themedText('room.emptyUser', '点击邀请好友'),
     headimg: themedAsset("images/avatar_default.png"),
     isEmpty : true,
     isReady : false,
@@ -21,7 +21,7 @@ export default class Room extends PIXI.Container {
     }
 
     initUI() {
-        let title = new PIXI.Text('1V1对战', { fontSize: 56, align : 'center', fill: "#515151"});
+        let title = new PIXI.Text(themedText('room.title', '1V1对战'), { fontSize: 56, align : 'center', fill: "#515151"});
         title.x   = config.GAME_WIDTH / 2 - title.width / 2;
         title.y   = 96;
         this.addChild(title);
@@ -39,8 +39,8 @@ export default class Room extends PIXI.Container {
             y     : 68,
             onclick: () => {
                 wx.showModal({
-                    title: '温馨提示',
-                    content: '是否离开房间？',
+                    title: themedText('common.notice', '温馨提示'),
+                    content: themedText('room.leaveConfirm', '是否离开房间？'),
                     success: (res) => {
                         if ( res.confirm ) {
                             if (databus.matchPattern){
@@ -83,7 +83,7 @@ export default class Room extends PIXI.Container {
             y   : config.GAME_HEIGHT - 160,
             onclick: () => {
                 if ( !this.allReady ) {
-                    showTip('全部玩家准备后方可开始');
+                    showTip(themedText('room.needAllReady', '全部玩家准备后方可开始'));
                 } else {
                     this.gameServer.server.broadcastInRoom({
                         msg: "START"
@@ -172,7 +172,7 @@ export default class Room extends PIXI.Container {
                 user.interactive = true;
                 user.on('pointerdown', () => {
                     wx.shareAppMessage({
-                        title   : '帧同步demo',
+                        title   : themedText('room.shareTitle', '帧同步demo'),
                         query   : 'accessInfo=' + this.gameServer.accessInfo,
                         imageUrl: 'https://res.wx.qq.com/wechatgame/product/luban/assets/img/sprites/bk.jpg',
                     });

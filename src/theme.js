@@ -30,6 +30,32 @@ const LOBSTER_MAP = {
   'images/bg.mp3': 'images/theme/lobster/bg.mp3',
 };
 
+const LOBSTER_TEXT_MAP = {
+  'home.title': '龙虾帝国 · 对战演练场',
+  'home.lowVersion': '你的微信版本过低，无法运行龙虾主题演示。',
+  'home.creatingRoom': '正在创建虾房...',
+  'room.emptyUser': '点击邀请虾友',
+  'room.title': '龙虾1V1对战',
+  'room.leaveConfirm': '是否离开虾房？',
+  'room.needAllReady': '全员就绪后才能开战',
+  'room.shareTitle': '龙虾帝国对战邀请',
+  'battle.leaveConfirm': '离开虾房会结束当前对战，确认离开吗？',
+  'battle.opponentLeft': '对手已离开虾房，无法继续对战。',
+  'battle.hpLabel': '耐久值：',
+  'battle.countdown': '开战倒计时 {count} 秒',
+  'common.notice': '温馨提示',
+  'result.title': '龙虾对战结算',
+  'result.win': '胜利',
+  'result.confirm': '返回大厅',
+  'server.connected': '游戏已连接',
+  'server.disconnected': '游戏已掉线...',
+  'server.matchSuccess': '匹配成功！3秒后开始龙虾对战',
+  'server.gameTime': '对局时长: {sec}s',
+  'server.reconnectPrompt': '检测到未结束对局，是否重连继续？',
+  'server.reconnectFail': '重连失败，请重新开房间',
+  'server.matching': '正在匹配虾友...',
+};
+
 export const activeTheme = ENABLE_LOBSTER_THEME ? LOBSTER_THEME : DEFAULT_THEME;
 
 export function themedAsset(path) {
@@ -39,4 +65,12 @@ export function themedAsset(path) {
 
 export function themedResources(resources) {
   return resources.map((item) => themedAsset(item));
+}
+
+export function themedText(key, fallback, vars = {}) {
+  const base = activeTheme === LOBSTER_THEME ? (LOBSTER_TEXT_MAP[key] || fallback) : fallback;
+  return Object.keys(vars).reduce(
+    (acc, k) => acc.replace(new RegExp(`\\{${k}\\}`, 'g'), String(vars[k])),
+    base,
+  );
 }

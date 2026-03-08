@@ -16,7 +16,7 @@ import Debug from '../base/debug.js';
 import {
     createText
 } from '../common/ui.js';
-import { themedAsset } from '../theme.js';
+import { themedAsset, themedText } from '../theme.js';
 
 export default class Battle extends PIXI.Container {
     constructor() {
@@ -65,7 +65,7 @@ export default class Battle extends PIXI.Container {
             x     : 104,
             y     : 68,
             onclick: () => {
-                this.showModal('离开房间会游戏结束！你确定吗？')
+                this.showModal(themedText('battle.leaveConfirm', '离开房间会游戏结束！你确定吗？'))
             }
         });
 
@@ -76,7 +76,7 @@ export default class Battle extends PIXI.Container {
         this.gameServer.event.on(
             "onRoomInfoChange",
             (res => {
-                 res.memberList.length < 2 && this.showModal( '对方已离开房间，无法继续进行PK！' , true );
+                 res.memberList.length < 2 && this.showModal(themedText('battle.opponentLeft', '对方已离开房间，无法继续进行PK！'), true);
             }).bind(this)
         );
     }
@@ -138,7 +138,7 @@ export default class Battle extends PIXI.Container {
                 y: 96
             }));
         value = createText({
-            str: "生命值：",
+            str: themedText('battle.hpLabel', '生命值：'),
             style: {
                 fontSize: 24,
                 fill: "#383838"
@@ -151,7 +151,7 @@ export default class Battle extends PIXI.Container {
 
     renderCount(count) {
         this.countdownText = createText({
-            str: `倒计时${count}秒`,
+            str: themedText('battle.countdown', `倒计时${count}秒`, { count }),
             x  : config.GAME_WIDTH / 2,
             y  : 330,
         });
@@ -242,7 +242,7 @@ export default class Battle extends PIXI.Container {
 
     showModal(content, isCancel){
         wx.showModal({
-            title: '温馨提示',
+            title: themedText('common.notice', '温馨提示'),
             content,
             showCancel: !isCancel,
             success: (res) => {
