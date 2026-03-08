@@ -8,6 +8,11 @@
 ## 运行截图
 ![demo](/images/demo.jpg)
 
+## 龙虾主题换皮（Phase 1）
+- 主题开关：`src/theme.js` 中 `ENABLE_LOBSTER_THEME`
+- 占位资源目录：`images/theme/lobster/`
+- 当前策略：默认关闭（`false`）确保零回归；可切换为 `true` 验证主题映射链路。
+
 ## 文件目录
 ```
 |-- src

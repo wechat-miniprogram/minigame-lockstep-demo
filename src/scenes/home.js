@@ -2,6 +2,7 @@ import * as PIXI  from '../../libs/pixi.js';
 import config     from '../config.js';
 import databus    from '../databus.js';
 import { createBtn, createText } from '../common/ui.js';
+import { themedAsset } from '../theme.js';
 
 import Debug from '../base/debug.js';
 
@@ -25,7 +26,7 @@ export default class Home extends PIXI.Container {
                 }
             }),
             createBtn({
-                img    : 'images/quickStart.png',
+                img    : themedAsset('images/quickStart.png'),
                 x      : config.GAME_WIDTH / 2,
                 y      : 442,
                 onclick: () => {
@@ -39,7 +40,7 @@ export default class Home extends PIXI.Container {
                 }
             }),
             createBtn({
-                img    : 'images/createRoom.png',
+                img    : themedAsset('images/createRoom.png'),
                 x      : config.GAME_WIDTH / 2,
                 y      : 582,
                 onclick: () => {

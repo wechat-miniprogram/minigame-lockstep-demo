@@ -1,6 +1,7 @@
 import * as PIXI from '../../libs/pixi.js';
 import config    from '../config.js';
 import databus   from '../databus.js';
+import { themedAsset } from '../theme.js';
 import {
     velocityDecomposition,
     getDistance,
@@ -11,7 +12,7 @@ const dpr = 2;
 
 export default class Bullet extends PIXI.Sprite {
     constructor() {
-        let texture = PIXI.Texture.from('images/bullet_blue.png');
+        let texture = PIXI.Texture.from(themedAsset('images/bullet_blue.png'));
         super(texture);
 
         this.width  = 10 * dpr;

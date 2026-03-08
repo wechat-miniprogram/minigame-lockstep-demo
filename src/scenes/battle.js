@@ -16,6 +16,7 @@ import Debug from '../base/debug.js';
 import {
     createText
 } from '../common/ui.js';
+import { themedAsset } from '../theme.js';
 
 export default class Battle extends PIXI.Container {
     constructor() {
@@ -60,7 +61,7 @@ export default class Battle extends PIXI.Container {
 
     appendBackBtn() {
         const back = createBtn({
-            img   : 'images/goBack.png',
+            img   : themedAsset('images/goBack.png'),
             x     : 104,
             y     : 68,
             onclick: () => {

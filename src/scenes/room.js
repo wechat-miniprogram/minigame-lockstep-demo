@@ -3,10 +3,11 @@ import config     from '../config.js';
 import { createBtn } from '../common/ui.js';
 import databus    from '../databus.js';
 import { showTip } from '../common/util.js';
+import { themedAsset } from '../theme.js';
 
 const emptyUser = {
     nickname: '点击邀请好友',
-    headimg: "images/avatar_default.png",
+    headimg: themedAsset("images/avatar_default.png"),
     isEmpty : true,
     isReady : false,
 }
@@ -33,7 +34,7 @@ export default class Room extends PIXI.Container {
 
     appendBackBtn() {
         const back = createBtn({
-            img   : 'images/goBack.png',
+            img   : themedAsset('images/goBack.png'),
             x     : 104,
             y     : 68,
             onclick: () => {
@@ -68,7 +69,7 @@ export default class Room extends PIXI.Container {
         let isHosticon = role === config.roleMap.owner;
 
         let getReady = createBtn({
-            img : 'images/getReady.png',
+            img : themedAsset('images/getReady.png'),
             x   : config.GAME_WIDTH / 2 - 159,
             y   : config.GAME_HEIGHT - 160,
             onclick: () => {
@@ -77,7 +78,7 @@ export default class Room extends PIXI.Container {
         })
 
         let start = createBtn({
-            img : 'images/start.png',
+            img : themedAsset('images/start.png'),
             x   : config.GAME_WIDTH / 2 + 159,
             y   : config.GAME_HEIGHT - 160,
             onclick: () => {
@@ -126,14 +127,14 @@ export default class Room extends PIXI.Container {
         user.addChild(name);
 
         if ( role === config.roleMap.owner ) {
-            const host = new PIXI.Sprite.from("images/hosticon.png");
+            const host = new PIXI.Sprite.from(themedAsset("images/hosticon.png"));
             host.scale.set(.8);
             host.y = -30;
             user.addChild(host);
         }
 
         if ( isReady && !databus.matchPattern ) {
-            const ready = new PIXI.Sprite.from('images/iconready.png');
+            const ready = new PIXI.Sprite.from(themedAsset('images/iconready.png'));
             ready.width  = 40;
             ready.height = 40;
             ready.x = user.width;

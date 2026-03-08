@@ -2,6 +2,7 @@ import {
     none
 } from '../common/util.js';
 import databus from '../databus.js';
+import { themedAsset } from '../theme.js';
 
 class Login {
     constructor() {
@@ -40,7 +41,7 @@ class Login {
 
         const button = wx.createUserInfoButton({
             type: 'image',
-            image: 'images/start.png',
+            image: themedAsset('images/start.png'),
             style: {
                 left: window.innerWidth / 2 - width / 2,
                 top : window.innerHeight / 2 - height / 2,

@@ -5,6 +5,7 @@ import databus   from './databus.js'
 import {
     showTip,
 } from './common/util.js';
+import { themedAsset } from './theme.js';
 
 class GameServer {
     constructor() {
@@ -380,7 +381,7 @@ class GameServer {
             memberList: [
                 { headimg: avatarUrl, nickname: nickName },
                 {
-                    headimg: "images/avatar_default.png",
+                    headimg: themedAsset("images/avatar_default.png"),
                     nickname: "正在匹配玩家...",
                 },
             ]

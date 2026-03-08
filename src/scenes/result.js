@@ -1,6 +1,7 @@
 import * as PIXI  from '../../libs/pixi.js';
 import config     from '../config.js';
 import { createBtn } from '../common/ui.js';
+import { themedAsset } from '../theme.js';
 
 export default class Result extends PIXI.Container {
     constructor() {
@@ -23,7 +24,7 @@ export default class Result extends PIXI.Container {
 
     appendOpBtn() {
         this.addChild(createBtn({
-            img : 'images/btn_bg.png',
+            img : themedAsset('images/btn_bg.png'),
             x   : config.GAME_WIDTH / 2,
             y   : config.GAME_HEIGHT - 150,
             text: '确定',
@@ -55,7 +56,7 @@ export default class Result extends PIXI.Container {
         user.addChild(name);
 
         if ( role === config.roleMap.owner ) {
-            const host = new PIXI.Sprite.from('images/hosticon.png');
+            const host = new PIXI.Sprite.from(themedAsset('images/hosticon.png'));
             host.width  = 30;
             host.height = 30;
             user.addChild(host);
