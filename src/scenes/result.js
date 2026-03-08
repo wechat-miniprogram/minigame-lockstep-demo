@@ -1,7 +1,7 @@
 import * as PIXI  from '../../libs/pixi.js';
 import config     from '../config.js';
 import { createBtn } from '../common/ui.js';
-import { themedAsset, themedText } from '../theme.js';
+import { themedAsset, themedText, themedAdText } from '../theme.js';
 
 export default class Result extends PIXI.Container {
     constructor() {
@@ -32,6 +32,35 @@ export default class Result extends PIXI.Container {
                 this.gameServer.clear();
             }
         }));
+
+        // Phase 3: ad entry UI scaffold only (no real ad SDK calls yet)
+        if (!config.adUiEnabled) return;
+
+        const variant = config.adCopyVariant || 'A';
+        const makeHint = (descKey, fallbackDesc) => () => {
+            wx.showModal({
+                title: themedText('common.notice', '温馨提示'),
+                content: `${themedAdText(descKey, fallbackDesc, {}, variant)}\n\n${themedText('result.adDemoHint', '当前为广告入口演示模式，未接入真实广告SDK。')}`,
+                showCancel: false,
+            });
+        };
+
+        this.addChild(
+            createBtn({
+                img : themedAsset('images/btn_bg.png'),
+                x   : config.GAME_WIDTH / 2 - 170,
+                y   : config.GAME_HEIGHT - 245,
+                text: themedAdText('ad.reviveButton', '看广告复活', {}, variant),
+                onclick: makeHint('ad.reviveDesc', '观看激励视频后，可获得一次继续对战机会。'),
+            }),
+            createBtn({
+                img : themedAsset('images/btn_bg.png'),
+                x   : config.GAME_WIDTH / 2 + 170,
+                y   : config.GAME_HEIGHT - 245,
+                text: themedAdText('ad.doubleRewardButton', '看广告双倍奖励', {}, variant),
+                onclick: makeHint('ad.doubleRewardDesc', '观看激励视频后，本局结算奖励翻倍。'),
+            }),
+        );
     }
 
     createOneUser(options) {

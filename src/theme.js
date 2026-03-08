@@ -7,6 +7,9 @@ const LOBSTER_THEME = 'lobster';
 // Phase 1: safe default is classic. Set to true after final assets are ready.
 const ENABLE_LOBSTER_THEME = false;
 
+// Phase 3: ad UI copy variant switch (A/B). UI hooks are non-functional by default.
+const AD_COPY_VARIANT = 'A';
+
 const LOBSTER_MAP = {
   'images/bg.png': 'images/theme/lobster/bg.png',
   'images/aircraft1.png': 'images/theme/lobster/aircraft1.png',
@@ -47,6 +50,7 @@ const LOBSTER_TEXT_MAP = {
   'result.title': '龙虾对战结算',
   'result.win': '胜利',
   'result.confirm': '返回大厅',
+  'result.adDemoHint': '当前为广告入口演示模式，未接入真实广告SDK。',
   'server.connected': '游戏已连接',
   'server.disconnected': '游戏已掉线...',
   'server.matchSuccess': '匹配成功！3秒后开始龙虾对战',
@@ -56,7 +60,23 @@ const LOBSTER_TEXT_MAP = {
   'server.matching': '正在匹配虾友...',
 };
 
+const LOBSTER_AD_TEXT_MAP = {
+  A: {
+    'ad.reviveButton': '看广告立即复活',
+    'ad.doubleRewardButton': '看广告领双倍虾币',
+    'ad.reviveDesc': '观看激励视频后，可获得一次继续对战机会。',
+    'ad.doubleRewardDesc': '观看激励视频后，本局结算奖励翻倍。',
+  },
+  B: {
+    'ad.reviveButton': '再战一次（激励视频）',
+    'ad.doubleRewardButton': '奖励翻倍（激励视频）',
+    'ad.reviveDesc': '完成激励视频可返场继续挑战。',
+    'ad.doubleRewardDesc': '完成激励视频可获得本局双倍结算。',
+  },
+};
+
 export const activeTheme = ENABLE_LOBSTER_THEME ? LOBSTER_THEME : DEFAULT_THEME;
+export const adCopyVariant = AD_COPY_VARIANT;
 
 export function themedAsset(path) {
   if (activeTheme !== LOBSTER_THEME) return path;
@@ -69,6 +89,15 @@ export function themedResources(resources) {
 
 export function themedText(key, fallback, vars = {}) {
   const base = activeTheme === LOBSTER_THEME ? (LOBSTER_TEXT_MAP[key] || fallback) : fallback;
+  return Object.keys(vars).reduce(
+    (acc, k) => acc.replace(new RegExp(`\\{${k}\\}`, 'g'), String(vars[k])),
+    base,
+  );
+}
+
+export function themedAdText(key, fallback, vars = {}, variant = adCopyVariant) {
+  const variantPack = LOBSTER_AD_TEXT_MAP[variant] || LOBSTER_AD_TEXT_MAP.A;
+  const base = activeTheme === LOBSTER_THEME ? (variantPack[key] || fallback) : fallback;
   return Object.keys(vars).reduce(
     (acc, k) => acc.replace(new RegExp(`\\{${k}\\}`, 'g'), String(vars[k])),
     base,

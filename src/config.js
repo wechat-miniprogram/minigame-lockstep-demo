@@ -4,6 +4,7 @@ import {
 import {
     themedResources,
     activeTheme,
+    adCopyVariant,
 } from './theme.js';
 
 const deviceinfo = getDeviceInfo();
@@ -11,6 +12,8 @@ const deviceinfo = getDeviceInfo();
 export default {
     debug       : true,
     theme       : activeTheme,
+    adUiEnabled : false,
+    adCopyVariant,
 
     dpr         : deviceinfo.devicePixelRatio,
     windowWidth : deviceinfo.windowWidth,
