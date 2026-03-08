@@ -12,8 +12,10 @@ const deviceinfo = getDeviceInfo();
 export default {
     debug       : true,
     theme       : activeTheme,
-    adUiEnabled : false,
+    adUiEnabled : true,
     adCopyVariant,
+    adUnitId    : '', // fill with real WeChat rewarded adUnitId in production
+    adMaxPromptsPerRound: 2,
 
     dpr         : deviceinfo.devicePixelRatio,
     windowWidth : deviceinfo.windowWidth,

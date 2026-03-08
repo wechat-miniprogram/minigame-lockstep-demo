@@ -17,9 +17,10 @@
 - 提审模板：`docs/wechat-submission-template-phase25.md`
 - UI文案包：`docs/lobster-ui-copy-pack-phase25.md`
 - 广告文案AB：`docs/ad-copy-ab-phase3.md`
+- 广告接入说明：`docs/ad-integration-phase4.md`
 - 校验脚本：`node tools/verify_lobster_assets.js`
 - 当前策略：默认关闭（`false`）确保零回归；可切换为 `true` 验证主题映射链路。
-- 广告入口演示：`src/config.js` 中 `adUiEnabled`（默认 `false`，仅文案入口，不调SDK）
+- 广告入口：`src/config.js` 中 `adUiEnabled`（默认 `true`）+ `adUnitId`（默认空，需手动填写）
 
 ## 文件目录
 ```
