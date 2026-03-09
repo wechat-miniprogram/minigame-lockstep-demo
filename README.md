@@ -8,6 +8,20 @@
 ## 运行截图
 ![demo](/images/demo.jpg)
 
+## 龙虾主题换皮（Phase 1 / 2）
+- 主题开关：`src/theme.js` 中 `ENABLE_LOBSTER_THEME`
+- 占位资源目录：`images/theme/lobster/`
+- 资源规范：`docs/lobster-asset-spec-phase2.md`
+- 替换清单：`docs/lobster-replace-checklist.md`
+- 发布清单：`docs/wechat-release-checklist.md`
+- 提审模板：`docs/wechat-submission-template-phase25.md`
+- UI文案包：`docs/lobster-ui-copy-pack-phase25.md`
+- 广告文案AB：`docs/ad-copy-ab-phase3.md`
+- 广告接入说明：`docs/ad-integration-phase4.md`
+- 校验脚本：`node tools/verify_lobster_assets.js`
+- 当前策略：默认关闭（`false`）确保零回归；可切换为 `true` 验证主题映射链路。
+- 广告入口：`src/config.js` 中 `adUiEnabled`（默认 `true`）+ `adUnitId`（默认空，需手动填写）
+
 ## 文件目录
 ```
 |-- src

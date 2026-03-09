@@ -7,7 +7,7 @@ import gameServer  from './gameserver.js';
 import login       from './base/login.js';
 import Room        from './scenes/room.js';
 import Battle      from './scenes/battle.js';
-// import Result      from './scenes/result.js';
+import Result      from './scenes/result.js';
 import Home        from './scenes/home.js';
 
 export default class App extends PIXI.Application {
@@ -87,18 +87,7 @@ export default class App extends PIXI.Application {
         });
 
         gameServer.event.on('onGameEnd', () => {
-           gameServer.gameResult.forEach((member) => {
-                var isSelf = member.nickname === databus.userInfo.nickName;
-                isSelf && wx.showModal({
-                    content: member.win ? "你已获得胜利" : "你输了",
-                    confirmText: "返回首页",
-                    confirmColor: "#02BB00",
-                    showCancel: false,
-                    success: () => {
-                       gameServer.clear();
-                    }
-                });
-            });
+            databus.gameInstance = this.runScene(Result);
         });
     }
 

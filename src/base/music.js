@@ -1,16 +1,17 @@
+import { themedAsset } from '../theme.js';
 
 class Music {
     constructor() {
         //this.playBgm();
 
         this.shoot = wx.createInnerAudioContext();
-        this.shoot.src  = 'images/shoot.mp3';
+        this.shoot.src  = themedAsset('images/shoot.mp3');
     }
 
     playBgm() {
         let ctx = wx.createInnerAudioContext();
 
-        ctx.src  = 'images/bg.mp3';
+        ctx.src  = themedAsset('images/bg.mp3');
         ctx.loop = true;
 
         ctx.play();

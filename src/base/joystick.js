@@ -7,6 +7,7 @@ import {
     convertRadian2Degree,
     convertDegree2Radian
 } from '../common/util.js';
+import { themedAsset } from '../theme.js';
 
 const dpr = 2;
 
@@ -106,7 +107,7 @@ export default class JoyStick extends PIXI.Container {
 			radius: this.radius,
 			alpha: 0
 		}),
-		img = PIXI.Sprite.from('images/joystick_wrap.png');
+		img = PIXI.Sprite.from(themedAsset('images/joystick_wrap.png'));
 		
         wrap.interactive = true;
         wrap.width  = JOYSTICKWIDTH;
@@ -124,7 +125,7 @@ export default class JoyStick extends PIXI.Container {
             y: this.wrap.y
         }
 
-        this.button = PIXI.Sprite.from('images/joystick.png');
+        this.button = PIXI.Sprite.from(themedAsset('images/joystick.png'));
         this.button.width  = 50 * dpr;
         this.button.height = 50 * dpr;
         this.button.radius = 25 * dpr;

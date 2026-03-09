@@ -3,10 +3,11 @@ import config     from '../config.js';
 import { createBtn } from '../common/ui.js';
 import databus    from '../databus.js';
 import { showTip } from '../common/util.js';
+import { themedAsset, themedText } from '../theme.js';
 
 const emptyUser = {
-    nickname: '点击邀请好友',
-    headimg: "images/avatar_default.png",
+    nickname: themedText('room.emptyUser', '点击邀请好友'),
+    headimg: themedAsset("images/avatar_default.png"),
     isEmpty : true,
     isReady : false,
 }
@@ -20,7 +21,7 @@ export default class Room extends PIXI.Container {
     }
 
     initUI() {
-        let title = new PIXI.Text('1V1对战', { fontSize: 56, align : 'center', fill: "#515151"});
+        let title = new PIXI.Text(themedText('room.title', '1V1对战'), { fontSize: 56, align : 'center', fill: "#515151"});
         title.x   = config.GAME_WIDTH / 2 - title.width / 2;
         title.y   = 96;
         this.addChild(title);
@@ -33,13 +34,13 @@ export default class Room extends PIXI.Container {
 
     appendBackBtn() {
         const back = createBtn({
-            img   : 'images/goBack.png',
+            img   : themedAsset('images/goBack.png'),
             x     : 104,
             y     : 68,
             onclick: () => {
                 wx.showModal({
-                    title: '温馨提示',
-                    content: '是否离开房间？',
+                    title: themedText('common.notice', '温馨提示'),
+                    content: themedText('room.leaveConfirm', '是否离开房间？'),
                     success: (res) => {
                         if ( res.confirm ) {
                             if (databus.matchPattern){
@@ -68,7 +69,7 @@ export default class Room extends PIXI.Container {
         let isHosticon = role === config.roleMap.owner;
 
         let getReady = createBtn({
-            img : 'images/getReady.png',
+            img : themedAsset('images/getReady.png'),
             x   : config.GAME_WIDTH / 2 - 159,
             y   : config.GAME_HEIGHT - 160,
             onclick: () => {
@@ -77,12 +78,12 @@ export default class Room extends PIXI.Container {
         })
 
         let start = createBtn({
-            img : 'images/start.png',
+            img : themedAsset('images/start.png'),
             x   : config.GAME_WIDTH / 2 + 159,
             y   : config.GAME_HEIGHT - 160,
             onclick: () => {
                 if ( !this.allReady ) {
-                    showTip('全部玩家准备后方可开始');
+                    showTip(themedText('room.needAllReady', '全部玩家准备后方可开始'));
                 } else {
                     this.gameServer.server.broadcastInRoom({
                         msg: "START"
@@ -126,14 +127,14 @@ export default class Room extends PIXI.Container {
         user.addChild(name);
 
         if ( role === config.roleMap.owner ) {
-            const host = new PIXI.Sprite.from("images/hosticon.png");
+            const host = new PIXI.Sprite.from(themedAsset("images/hosticon.png"));
             host.scale.set(.8);
             host.y = -30;
             user.addChild(host);
         }
 
         if ( isReady && !databus.matchPattern ) {
-            const ready = new PIXI.Sprite.from('images/iconready.png');
+            const ready = new PIXI.Sprite.from(themedAsset('images/iconready.png'));
             ready.width  = 40;
             ready.height = 40;
             ready.x = user.width;
@@ -171,7 +172,7 @@ export default class Room extends PIXI.Container {
                 user.interactive = true;
                 user.on('pointerdown', () => {
                     wx.shareAppMessage({
-                        title   : '帧同步demo',
+                        title   : themedText('room.shareTitle', '帧同步demo'),
                         query   : 'accessInfo=' + this.gameServer.accessInfo,
                         imageUrl: 'https://res.wx.qq.com/wechatgame/product/luban/assets/img/sprites/bk.jpg',
                     });

@@ -13,14 +13,15 @@ import {
 import Bullet  from '../base/bullet.js';
 import databus from '../databus.js';
 import music   from '../base/music.js';
+import { themedAsset } from '../theme.js';
 
 const dpr = 2;
 
 export default class Player extends PIXI.extras.AnimatedSprite {
     constructor() {
         let alienImages = [
-            "images/aircraft1.png",
-            "images/aircraft2.png"
+            themedAsset("images/aircraft1.png"),
+            themedAsset("images/aircraft2.png")
         ];
 
         let textureArray = alienImages.map(item => {

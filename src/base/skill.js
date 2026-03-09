@@ -1,16 +1,17 @@
 import * as PIXI from '../../libs/pixi.js';
 import config    from '../config.js';
+import { themedAsset } from '../theme.js';
 
 const dpr = 2;
 
 export default class JoyStick extends PIXI.Sprite {
     constructor() {
-        let button  = PIXI.Texture.from("images/attack.png");
+        let button  = PIXI.Texture.from(themedAsset("images/attack.png"));
 
         super(button);
 
         this.button       = button;
-        this.buttonActive = PIXI.Texture.from("images/attacking.png")
+        this.buttonActive = PIXI.Texture.from(themedAsset("images/attacking.png"))
 
         this.eventemitter = new PIXI.utils.EventEmitter();
 

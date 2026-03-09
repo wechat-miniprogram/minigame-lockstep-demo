@@ -1,9 +1,10 @@
 import * as PIXI from '../../libs/pixi.js';
 import config    from '../config.js';
+import { themedAsset } from '../theme.js';
 
 export default class BackGround extends PIXI.Sprite {
     constructor() {
-        let texture = PIXI.Texture.from('images/bg.png');
+        let texture = PIXI.Texture.from(themedAsset('images/bg.png'));
         super(texture);
 
         this.fill();

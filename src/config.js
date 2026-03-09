@@ -1,11 +1,21 @@
 import {
     getDeviceInfo
 } from './common/util.js';
+import {
+    themedResources,
+    activeTheme,
+    adCopyVariant,
+} from './theme.js';
 
 const deviceinfo = getDeviceInfo();
 
 export default {
     debug       : true,
+    theme       : activeTheme,
+    adUiEnabled : true,
+    adCopyVariant,
+    adUnitId    : '', // fill with real WeChat rewarded adUnitId in production
+    adMaxPromptsPerRound: 2,
 
     dpr         : deviceinfo.devicePixelRatio,
     windowWidth : deviceinfo.windowWidth,
@@ -30,7 +40,7 @@ export default {
 
     deviceinfo,
 
-    resources: [
+    resources: themedResources([
         "images/bg.png",
         "images/aircraft1.png",
         "images/aircraft2.png",
@@ -39,7 +49,17 @@ export default {
         "images/avatar_default.png",
         "images/hosticon.png",
         "images/iconready.png",
-    ],
+        "images/quickStart.png",
+        "images/createRoom.png",
+        "images/goBack.png",
+        "images/getReady.png",
+        "images/start.png",
+        "images/btn_bg.png",
+        "images/attack.png",
+        "images/attacking.png",
+        "images/joystick_wrap.png",
+        "images/joystick.png",
+    ]),
 
     msg: {
         "SHOOT"         : 1,
